@@ -1,0 +1,33 @@
+.pointer{
+    cursor: pointer;
+}
+
+.filter{
+    margin-left: 30px;
+}
+
+.fitlerBox{
+    z-index: 1050; 
+    position: absolute; 
+    background-color: lightgray;
+    border: 1px solid red;
+    min-width: 150px;
+}
+
+.circle-progress {
+    width: 39px;
+    max-width: 110px;
+    margin: auto;
+    position: relative; 
+}
+
+.percent {
+    font-size: 12px;
+    color: #ef5552;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%); 
+}

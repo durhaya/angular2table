@@ -1,0 +1,6 @@
+<ng-table [data]="rows" [headers]="columns" [dataPaging]="true" [pageSize]="pageSize" [needCheckBox]="true" [updateCheckboxForARecord]="updateCheckBox" (update)="counterUpdate($event)" (selectedRow)="SelectedRow($event)"></ng-table>
+<button (click)="ChangeData()">Change Data</button>
+{{totalRows}}
+
+<!--<ng-table [data]="rows2" [headers]="columns" (update)="counterUpdate2($event)"></ng-table>
+{{totalRows2}}-->

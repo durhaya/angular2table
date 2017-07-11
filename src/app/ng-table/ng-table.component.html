@@ -1,0 +1,121 @@
+<table class="table">
+  <thead>
+    <tr>
+      <th *ngIf="isExpandable" style="width:10px"></th>
+      <th *ngIf="internalNeedCheckBox"></th>
+      <template ngFor let-item [ngForOf]="this.internalHeaders" let-i="index">
+          <th *ngIf="ColumnVisibility(item.breakpoints)">
+            <span [ngClass]="{'pointer':item.canSort}" (click)="sort(item)">
+              {{item.displayName}}
+              <i *ngIf="item.canSort" class="fa" 
+                [ngClass]="{'fa-sort': column != item.name, 'fa-sort-asc': (column == item.name && !isDesc), 
+                'fa-sort-desc': (column == item.name && isDesc) }" 
+                aria-hidden="true"> 
+              </i>
+            </span>
+            <span class="glyphicon glyphicon-filter filter" (click)="colFilterIndex=colFilterIndex==i?-1:i"></span>
+            <div *ngIf="colFilterIndex==i" class="fitlerBox">
+              Filter 
+              <hr>
+              {{item.displayName}}
+              <br *ngIf="item.filterType!='Range'"> <input *ngIf="item.filterType!='Range'" type="text" [(ngModel)]="item.filterValue" placeholder="Search" />
+              <br *ngIf="item.filterType=='Range' && item.dataType!='number'"> <input *ngIf="item.filterType=='Range' && item.dataType!='number'" type="text" [(ngModel)]="item.filterMinValue" placeholder="From" />
+              <br *ngIf="item.filterType=='Range' && item.dataType!='number'"> <input *ngIf="item.filterType=='Range' && item.dataType!='number'" type="text" [(ngModel)]="item.filterMaxValue" placeholder="To" />
+              <ion-range-slider *ngIf="item.filterType=='Range' && item.dataType=='number'"
+                                type="double"
+                                min="0"
+                                max="100"
+                                [from]="item.filterMinValue"
+                                [to]="item.filterMaxValue"
+                                from_shadow="true"
+                                to_shadow="true"
+                                grid="false"
+                                grid_num="10"
+                                decorate_both="false"
+                                keyboard="true"
+                                keyboard_step="1"
+                                (onFinish)="OnSearchFinish($event,item)">
+              </ion-range-slider>
+              <br> <button (click)="doFilter()">Search</button>
+            </div>
+          </th>
+      </template>
+    </tr>
+  </thead>
+  <tfoot>
+    <span *ngIf="this.internalData==undefined || this.internalData==null || this.internalData.length==0"> No Records  </span>
+  </tfoot>
+  <tbody>
+    <template ngFor let-item [ngForOf]="this.pagedItems" let-i="index">
+      <tr (click)="SelectedRow(item)">
+        <td *ngIf="isExpandable && rowExpandIndex!=i" style="width:10px"><span class="glyphicon glyphicon-plus" (click)="ShowExpand(i)"></span></td>
+        <td *ngIf="isExpandable && rowExpandIndex==i" style="width:10px"><span class="glyphicon glyphicon-minus" (click)="rowExpandIndex=-1"></span></td>
+        <td *ngIf="internalNeedCheckBox"><input type="checkbox" [(checked)]="item.IsChecked" (change)="ChangeCheckboxSelection($event,item)" /> </td>
+        <template ngFor let-col [ngForOf]="this.internalHeaders">
+            <td *ngIf="ColumnVisibility(col.breakpoints) && !col.roundProgressbar">{{item[col.name]}}</td>
+            <td *ngIf="ColumnVisibility(col.breakpoints) && col.roundProgressbar">
+              <a href="javascript:void(0)" title="Analyze Risk Spread" class="risk_score_pop fancybox-effects-d">
+                  <div class="circle-progress">
+                      <round-progress max="100" current={{item[col.name]}} color="green"
+                                      background="#eaeaea" responsive="true" [radius]="100" stroke="12" [semicircle]="false" rounded="false" clockwise="true"
+                                      duration="800" animation="linearEase" animationDelay="0"></round-progress>
+
+                      <span class="percent count" [ngStyle]="{'color':green}">{{item[col.name]}}</span>
+                  </div>
+              </a>
+            </td>
+        </template>
+      </tr>
+      <tr *ngIf="isExpandable && rowExpandIndex==i">
+        <td style="width:10px"></td>
+        <td [attr.colspan]="this.internalHeaders.length">
+          <table>
+          <template ngFor let-col [ngForOf]="this.internalHeaders">
+            <tr *ngIf="!ColumnVisibility(col.breakpoints)">
+              <th>
+                {{col.displayName}}
+              </th>
+              <td>
+                {{item[col.name]}}
+              </td>
+            </tr>
+          </template>
+          </table>          
+        </td>
+      </tr>
+    </template>
+  </tbody>
+</table>
+
+<!-- pager -->
+<ul *ngIf="pager.pages && pager.pages.length" class="pagination">
+    <li [ngClass]="{disabled:pager.currentPage === 1}">
+        <a (click)="setPage(1)">First</a>
+    </li>
+    <li [ngClass]="{disabled:pager.currentPage === 1}">
+        <a (click)="setPage(pager.currentPage - 1)">Previous</a>
+    </li>
+    <li *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}">
+        <a (click)="setPage(page)">{{page}}</a>
+    </li>
+    <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+        <a (click)="setPage(pager.currentPage + 1)">Next</a>
+    </li>
+    <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+        <a (click)="setPage(pager.totalPages)">Last</a>
+    </li>
+</ul>
+
+<!--<button type="button" (click)="modal1.show()">test</button>
+<modal-popup #modal1>
+    <div class="modal-popup-header">
+      header
+    </div>
+    <div class="modal-popup-body">
+      Whatever content you like, form fields, anything
+      <input type="text">
+    </div>
+    <div class="modal-popup-footer">
+
+    </div>
+  </modal-popup>-->
