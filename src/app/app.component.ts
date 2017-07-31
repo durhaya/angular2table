@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 
+declare var $:any;
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -11,6 +13,27 @@ export class AppComponent {
   totalRows:number = 0;
   totalRows2:number = 0;
   updateCheckBox:any;
+  expand:boolean = false;
+  expandAction:string = "Expand";
+
+  toggleExpand(){
+    if(this.expand==true)
+    {
+      this.expand = false;
+      this.expandAction = "Expand";
+      let cols:any = this.columns;
+      cols[4].breakpoints= 'xs,sm,md,lg';
+      this.columns = Object.assign([], cols);
+    }
+    else if(this.expand==false)
+    {
+      this.expand = true;
+      this.expandAction = "Collapse";
+      let cols:any = this.columns;
+      cols[4].breakpoints= 'xs,sm,md';
+      this.columns = Object.assign([], cols);
+    }
+  }
 
   counterUpdate(event: any) {
     this.totalRows = event.totalRows;
@@ -68,7 +91,7 @@ export class AppComponent {
     {
       name:'col5',
       displayName:'Date of Birth',
-      breakpoints: 'xs,sm,md',
+      breakpoints: 'xs,sm,md,lg',
       canSort:true,
       canfilter:true,
       filterType:'Range',

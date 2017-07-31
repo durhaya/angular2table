@@ -67,6 +67,8 @@ export class NgTableComponent implements OnInit {
     
     if (changes!=undefined && changes.headers!=undefined && changes.headers.currentValue) {
       this.internalHeaders = changes.headers.currentValue;
+      console.log('Header changed');
+      this.isExpandable = this.Expandable();
     }
     if (changes!=undefined && changes.data!=undefined && changes.data.currentValue) {
       let data = changes.data.currentValue;
